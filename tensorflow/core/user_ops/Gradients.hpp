@@ -8,9 +8,6 @@
 #include <iostream>
 #include <math.h>
 
-#include "gtest/gtest.h"
-
-
 using namespace Eigen;
 using namespace Sophus;
 using namespace std;
@@ -26,7 +23,7 @@ Matrix<T, 3, 3> skew_sym(const Matrix<T, 3, 1>& vec_) {
 }
 
 template < class T >
-Matrix<T, 9, 3> dR_by_dv(const Matrix<T, 3, 1>& rv_, float thr_) {
+Matrix<T, 9, 3> dso3_by_dv(const Matrix<T, 3, 1>& rv_, float thr_) {
 	//reference:
 	//if || rv_ ||^2 > thr_:
 	//       use Eqn (2) in "gvnn : Neural Network Library for Geometric Computer Vision"
@@ -57,7 +54,7 @@ Matrix<T, 9, 3> dR_by_dv(const Matrix<T, 3, 1>& rv_, float thr_) {
 }
 
 template < class T >
-Matrix<T, 9, 3> dR_by_dv_numerical(const Matrix<T, 3, 1>& rv_, float thr_) {
+Matrix<T, 9, 3> dso3_by_dv_numerical(const Matrix<T, 3, 1>& rv_, float thr_) {
 	//reference:
 	Matrix<T, 9, 3> out;
 	out.setZero();
@@ -195,7 +192,7 @@ Matrix<T, 12, 6> dse3_by_dv(const Matrix<T, 6, 1>& tangent_, float thr_) {
 	//Matrix<T, 3, 1> Vu = V*tangent_.template head<3>();
 
 	// get dso2_by_omega
-	Matrix<T, 9, 3> dso3 = dR_by_dv(omega, thr_);
+	Matrix<T, 9, 3> dso3 = dso3_by_dv(omega, thr_);
 	out.block(0, 3, 9, 3) = dso3;
 	//cout << out << endl;
 
